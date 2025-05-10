@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NETexam - Inscription</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #add8e6;
+      color: black;
+    }
+    .form-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: 50px auto;
+    }
+    .logo {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    .logo .net {
+      color: red;
+    }
+    .logo .exam {
+      color: #003366;
+    }
+    .form-label {
+      margin-top: 10px;
+    }
+    .form-control {
+      background-color: white;
+    }
+    .btn-custom {
+      background-color: #003366;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container text-center">
+    <div class="logo mb-4">
+      <span class="net">NET</span><span class="exam">exam</span>
+    </div>
+    <form id="registerForm">
+      <div class="mb-3 text-start">
+        <label class="form-label">Type d'utilisateur :</label>
+        <select class="form-control" name="type" required>
+          <option value="etudiant">Étudiant</option>
+          <option value="enseignant">Enseignant</option>
+        </select>
+      </div>
+      <div class="mb-3 text-start">
+        <label class="form-label">E-mail :</label>
+        <input type="email" class="form-control" name="email" required />
+      </div>
+      <div class="mb-3 text-start">
+        <label class="form-label">Mot de passe :</label>
+        <input type="password" class="form-control" name="password" required />
+      </div>
+      <div class="mb-3 text-start">
+        <label class="form-label">Nom :</label>
+        <input type="text" class="form-control" name="nom" required />
+      </div>
+      <div class="mb-3 text-start">
+        <label class="form-label">Prénom :</label>
+        <input type="text" class="form-control" name="prenom" required />
+      </div>
+      <div class="mb-3 text-start">
+        <label class="form-label">Date de naissance :</label>
+        <input type="date" class="form-control" name="dateNaissance" required />
+      </div>
+      <div class="mb-3 text-start">
+        <label class="form-label">Sexe :</label>
+        <select class="form-control" name="sexe" required>
+          <option value="Masculin">Masculin</option>
+          <option value="Féminin">Féminin</option>
+        </select>
+      </div>
+      <div class="mb-3 text-start">
+        <label class="form-label">Etablissement :</label>
+        <input type="text" class="form-control" name="etablissement" required />
+      </div>
+      <div class="mb-3 text-start">
+        <label class="form-label">Filière :</label>
+        <input type="text" class="form-control" name="filiere" required />
+      </div>
+      <div class="d-flex justify-content-between">
+        <button type="reset" class="btn btn-custom">Annuler</button>
+        <button type="submit" class="btn btn-custom">Envoyer</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch('http://localhost:3000/inscription', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const message = await response.text();
+
+        if (response.ok) {
+          alert(message); // ✅ رسالة النجاح
+          window.location.href = 'login.html'; // 🔄 إعادة التوجيه
+        } else {
+          alert(`❌ ${message}`); // ❌ رسالة الخطأ
+        }
+      } catch (err) {
+        console.error(err);
+        alert("❌ Erreur de connexion au serveur.");
+      }
+    });
+  </script>
+</body>
+</html>
