@@ -1,24 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Passer l'examen</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-<body>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Passer l'examen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container my-4">
+    <!--giolocalisation--> 
+    <div id="geoLocationPrompt" class="alert alert-info">
+        <p>Avant de commencer l'examen, nous avons besoin d'accéder à votre géolocalisation.</p>
+        <button id="allowGeo" class="btn btn-primary">Autoriser la géolocalisation</button>
+        <button id="denyGeo" class="btn btn-danger">Refuser</button>
+    </div>
+    
+    <!--giolocalisation--> 
     <h1 class="text-center mb-4">Passer l'examen</h1>
     <div class="input-group mb-3">
         <input type="text" id="examId" class="form-control" placeholder="Entrer l'ID de l'examen">
         <button id="loadExam" class="btn btn-primary">Entrer</button>
     </div>
+
+    <div id="examContainer"></div>
+    <h2 id="scoreContainer" class="mt-4"></h2>
+
 <script>
-       let currentIndex = 0;
+        //le debut de giolocalisation
+        
+ let userLocation = null;
+
+ function getGeoLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                userLocation = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
+                console.log('Position obtenue:', userLocation);
+
+                // Cacher la demande après autorisation
+                document.getElementById('geoLocationPrompt').style.display = 'none';
+            },
+            function(error) {
+                alert('La géolocalisation a échoué. Vous ne pourrez pas passer l\'examen.');
+                console.error(error);
+            }
+        );
+    } else {
+        alert('Votre navigateur ne prend pas en charge la géolocalisation.');
+    }
+}
+
+document.getElementById('allowGeo').addEventListener('click', getGeoLocation);
+
+document.getElementById('denyGeo').addEventListener('click', function() {
+    alert('Vous avez refusé la géolocalisation. Vous ne pourrez pas passer l\'examen.');
+    window.location.href = 'index.html'; // Redirection si refus
+});
+//fin giolocalisation
+
+        let currentIndex = 0;
         let score = 0;
         let examData = null;
         let timer = null;
 
+        
 
-    
         function showQuestion() {
             if (currentIndex >= examData.questions.length) {
                 document.getElementById('examContainer').innerHTML = '';
@@ -45,6 +92,18 @@
             `;
             startTimer(q.time);
         }
-</script>    
+
+        function detectMedia(file) {
+            const ext = file.split('.').pop();
+            if (['jpg', 'png', 'jpeg'].includes(ext)) return 'img';
+            if (['mp3'].includes(ext)) return 'audio';
+            if (['mp4'].includes(ext)) return 'video';
+            return 'div';
+        }
+
+    
+    </script>
 </body>
 </html>
+
+
