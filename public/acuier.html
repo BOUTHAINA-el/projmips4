@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetExam - Plateforme d'Examen en Ligne</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #10b981;
+            --secondary-dark: #059669;
+            --accent-color: #f59e0b;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --bg-color: #f9fafb;
+            --white: #ffffff;
+            --light-gray: #f3f4f6;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.8rem;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        
+        .logo-text span {
+            color: var(--primary-color);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li:not(:last-child) {
+            margin-right: 2rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--primary-color);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding-top: 160px;
+            padding-bottom: 80px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.07) 0%, rgba(37, 99, 235, 0.02) 100%);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+        
+        .hero-content h1 span {
+            color: var(--primary-color);
+        }
+        
+        .hero-content p {
+            font-size: 1.125rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+        
+        .feature-preview {
+            margin-top: 2rem;
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background-color: rgba(37, 99, 235, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+        
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--text-light);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .feature-card-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(37, 99, 235, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            padding: 6rem 0;
+            background-color: var(--light-gray);
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            counter-reset: step-counter;
+        }
+        
+        .step-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            position: relative;
+            counter-increment: step-counter;
+        }
+        
+        .step-card::before {
+            content: counter(step-counter);
+            position: absolute;
+            top: -20px;
+            left: 2rem;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        
+        .step-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        
+        .step-card p {
+            color: var(--text-light);
+        }
+        
+        /* Roles Section */
+        .roles {
+            padding: 6rem 0;
+        }
+        
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        
+        .role-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+        
+        .role-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .role-icon {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(37, 99, 235, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+        
+        .role-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .role-features {
+            margin-top: 1.5rem;
+        }
+        
+        .role-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .role-feature-icon {
+            color: var(--primary-color);
+            font-size: 1.25rem;
+        }
+        
+        .role-cta {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 4rem 0;
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-align: center;
+        }
+        
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .cta-content h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-content p {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .btn-white {
+            background-color: var(--white);
+            color: var(--primary-color);
+        }
+        
+        .btn-white:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .btn-outline-white {
+            background-color: transparent;
+            border: 1px solid var(--white);
+            color: var(--white);
+        }
+        
+        .btn-outline-white:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 4rem 0;
+            background-color: var(--light-gray);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .testimonial-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            transition: transform 0.3s;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .testimonial-content {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .author-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .author-info p {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--white);
+            border-top: 1px solid var(--border-color);
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-logo {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-about p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+        
+        .footer-links h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .copyright {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+        
+        .legal-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .legal-links a {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .legal-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 1024px) {
+            .features-grid, .roles-grid, .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                row-gap: 3rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .desktop-nav {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: var(--white);
+                box-shadow: var(--shadow);
+                padding: 1rem 0;
+            }
+            
+            .desktop-nav.active {
+                display: block;
+            }
+            
+            .desktop-nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .desktop-nav li {
+                margin: 0.75rem 0;
+            }
+            
+            .steps {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .features-grid, .roles-grid, .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-card-icon {
+                margin: 0 auto 1.5rem;
+            }
+            
+            .feature-card {
+                text-align: center;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .legal-links {
+                justify-content: center;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.25rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .cta-content h2 {
+                font-size: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="nav-container">
+                <a href="#" class="logo">
+                    <div class="logo-icon">N</div>
+                    <div class="logo-text">Net<span>Exam</span></div>
+                </a>
+
+                <nav class="desktop-nav">
+                    <ul>
+                        <li><a href="#features">Fonctionnalités</a></li>
+                        <li><a href="#how-it-works">Comment ça marche</a></li>
+                        <li><a href="#roles">Utilisateurs</a></li>
+                    </ul>
+                </nav>
+                
+                <button class="mobile-menu-toggle">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>La plateforme d'examen en ligne <span>nouvelle génération</span></h1>
+                <p>Créez, gérez et passez des examens en ligne en toute simplicité. Une solution complète pour les enseignants et les étudiants.</p>
+                <div class="hero-cta">
+                    <a href="form.html" class="btn btn-primary">Commencer</a>
+                    <a href="login.html" class="btn btn-outline">Se connecter</a>
+                </div>
+                <div class="feature-preview">
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <span>Facile à utiliser</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <span>100% sécurisé</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Fonctionnalités puissantes</h2>
+                <p>Notre plateforme d'examen en ligne offre tous les outils nécessaires pour créer et gérer vos examens de manière professionnelle.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-card-icon">📝</div>
+                    <h3>Questions avancées</h3>
+                    <p>Créez différents types de questions : QCM, questions directes avec tolérance aux erreurs, et bien plus encore.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">⏱️</div>
+                    <h3>Gestion du temps</h3>
+                    <p>Définissez une durée précise pour chaque question et automatisez le passage à la question suivante.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">📊</div>
+                    <h3>Évaluation automatique</h3>
+                    <p>Les résultats sont calculés automatiquement, avec un score final sur 100 pour chaque participant.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">🔗</div>
+                    <h3>Lien unique d'accès</h3>
+                    <p>Partagez facilement votre examen grâce à un lien unique généré automatiquement.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">📱</div>
+                    <h3>Responsive design</h3>
+                    <p>Interface adaptée à tous les appareils : ordinateurs, tablettes et smartphones.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">🔒</div>
+                    <h3>Sécurité renforcée</h3>
+                    <p>Authentification sécurisée et géolocalisation pour assurer l'intégrité des examens.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>Comment ça marche</h2>
+                <p>NetExam simplifie le processus d'examen en ligne en quelques étapes simples.</p>
+            </div>
+            <div class="steps">
+                <div class="step-card">
+                    <h3>Créez votre examen</h3>
+                    <p>En tant qu'enseignant, créez facilement votre examen avec des questions variées et définissez les paramètres tels que la durée et les notes.</p>
+                </div>
+                <div class="step-card">
+                    <h3>Partagez le lien d'accès</h3>
+                    <p>Un lien unique est généré automatiquement. Partagez-le avec vos étudiants pour leur permettre d'accéder à l'examen.</p>
+                </div>
+                <div class="step-card">
+                    <h3>Suivez les résultats</h3>
+                    <p>Les résultats sont calculés automatiquement et disponibles immédiatement après que les étudiants aient terminé l'examen.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roles" class="roles">
+        <div class="container">
+            <div class="section-header">
+                <h2>Pour tous les utilisateurs</h2>
+                <p>NetExam est conçu pour répondre aux besoins des enseignants et des étudiants avec des fonctionnalités spécifiques.</p>
+            </div>
+            <div class="roles-grid">
+                <div class="role-card">
+                    <div class="role-header">
+                        <div class="role-icon">👨‍🏫</div>
+                        <h3>Enseignants</h3>
+                    </div>
+                    <p>Créez et gérez facilement vos examens avec des fonctionnalités avancées.</p>
+                    <div class="role-features">
+                        <div class="role-feature-item">
+                            <span class="role-feature-icon">✓</span>
+                            <span>Création d'examens personnalisés</span>
+                        </div>
+                        <div class="role-feature-item">
+                            <span class="role-feature-icon">✓</span>
+                            <span>Questions directes et QCM avec médias</span>
+                        </div>
+                        <div class="role-feature-item">
+                            <span class="role-feature-icon">✓</span>
+                            <span>Gestion des notes et du temps</span>
+                        </div>
+                        <div class="role-feature-item">
+                            <span class="role-feature-icon">✓</span>
+                            <span>Génération de liens d'accès uniques</span>
+                        </div>
+                    </div>
+                    <div class="role-cta">
+                        <a href="form.html" class="btn btn-primary">Commencer</a>
+                    </div>
+                </div>
+                <div class="role-card">
+                    <div class="role-header">
+                        <div class="role-icon">👨‍🎓</div>
+                        <h3>Étudiants</h3>
+                    </div>
+                    <p>Passez vos examens en ligne de manière simple et intuitive.</p>
+                    <div class="role-features">
+                        <div class="role-feature-item">
+                            <span class="role-feature-icon">✓</span>
+                            <span>Accès facile via lien unique</span>
+                        </div>
+                        <div class="role-feature-item">
+                            <span class="role-feature-icon">✓</span>
+                            <span>Interface intuitive pour répondre aux questions</span>
+                        </div>
+                        <div class="role-feature-item">
+                            <span class="role-feature-icon">✓</span>
+                            <span>Timer pour chaque question</span>
+                        </div>
+                        <div class="role-feature-item">
+                            <span class="role-feature-icon">✓</span>
+                            <span>Résultats instantanés</span>
+                        </div>
+                    </div>
+                    <div class="role-cta">
+                        <a href="form.html" class="btn btn-primary">Commencer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>Ce que nos utilisateurs en pensent</h2>
+                <p>Découvrez les témoignages de ceux qui utilisent déjà NetExam.</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        "NetExam a révolutionné ma façon d'évaluer mes étudiants. La plateforme est intuitive et les résultats sont immédiats."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">M</div>
+                        <div class="author-info">
+                            <h4>Marie Dupont</h4>
+                            <p>Professeure de Mathématiques</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        "En tant qu'étudiant, j'apprécie la simplicité d'utilisation et la clarté des questions. Plus de stress pour les examens papier !"
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">P</div>
+                        <div class="author-info">
+                            <h4>Pierre Martin</h4>
+                            <p>Étudiant en Informatique</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        "La gestion du temps par question est une fonctionnalité exceptionnelle qui permet d'organiser des examens équitables pour tous."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">A</div>
+                        <div class="author-info">
+                            <h4>Anne Leroy</h4>
+                            <p>Directrice Pédagogique</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <a href="#" class="logo footer-logo">
+                        <div class="logo-icon">N</div>
+                        <div class="logo-text">Net<span>Exam</span></div>
+                    </a>
+                    <p>NetExam est la plateforme d'examen en ligne nouvelle génération pour les enseignants et les étudiants.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon">f</a>
+                        <a href="#" class="social-icon">t</a>
+                        <a href="#" class="social-icon">in</a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Ressources</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Guides</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Entreprise</h4>
+                    <ul>
+                        <li><a href="#">À propos</a></li>
+                        <li><a href="#">Carrières</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Légal</h4>
+                    <ul>
+                        <li><a href="#">Conditions d'utilisation</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="copyright">© 2025 NetExam. Tous droits réservés.</p>
+                <div class="legal-links">
+                    <a href="#">Mentions légales</a>
+                    <a href="#">CGV</a>
+                    <a href="#">Politique de cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-toggle').addEventListener('click', function() {
+            document.querySelector('.desktop-nav').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
