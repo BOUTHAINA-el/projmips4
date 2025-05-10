@@ -23,10 +23,17 @@
 
         <div class="mb-3">
             <select id="questionType" class="form-select">
-                 
+                <option value="direct">Direct</option>
                 <option value="qcm">QCM</option>
             </select>
         </div>
+        <div class="mb-3">
+            <textarea id="questionText" class="form-control" placeholder="Texte de la question"></textarea>
+        </div>
+        <div class="mb-3">
+            <textarea id="answerText" class="form-control" placeholder="Texte de la repondre"></textarea>
+        </div>
+        
         <div id="qcmFields" style="display: none;">
             <div class="mb-3">
                 <input type="text" id="options" class="form-control" placeholder="Options séparées par ; (ex: a;b;c)">
