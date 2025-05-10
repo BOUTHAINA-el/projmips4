@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un Examen</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container my-5">
+    <h1 class="mb-4 text-center">Créer un Examen</h1>
+
+    <div class="mb-3">
+        <input type="text" id="examTitle" class="form-control" placeholder="Titre de l'examen">
+    </div>
+    <div class="mb-3">
+        <textarea id="description" class="form-control" placeholder="Description"></textarea>
+    </div>
+    <div class="mb-3">
+        <input type="text" id="audience" class="form-control" placeholder="Public ciblé (ex: 1ère année, informatique)">
+    </div>
+
+    <h2 class="mt-4">Ajouter une question</h2>
+
+    <div class="mb-3">
+        <select id="questionType" class="form-select">
+            <option value="direct">Direct</option>
+            <option value="qcm">QCM</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <textarea id="questionText" class="form-control" placeholder="Texte de la question"></textarea>
+    </div>
+    <div class="mb-3">
+        <textarea id="answerText" class="form-control" placeholder="Texte de la repondre"></textarea>
+    </div>
+    <div class="mb-3">
+        <input type="number" id="note" class="form-control" placeholder="Note">
+    </div>
+    <div class="mb-3">
+        <input type="number" id="time" class="form-control" placeholder="Temps (secondes)">
+    </div>
+    <div id="qcmFields" style="display: none;">
+        <div class="mb-3">
+            <input type="text" id="options" class="form-control" placeholder="Options séparées par ; (ex: a;b;c)">
+        </div>
+        <div class="mb-3">
+            <input type="text" id="answers" class="form-control" placeholder="Indices des bonnes réponses (ex: 0;2)">
+        </div>
+    </div>
+    <div class="mb-3">
+        <input type="file" id="media" class="form-control">
+    </div>
+
+    <button id="addQuestion" class="btn btn-primary mb-4">Ajouter la question</button>
+
+    <div id="questionsContainer"></div>
+
+    <button id="finish" class="btn btn-success">Finish</button>
+</div>
+
+<!-- Bootstrap JS (optional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    let questions = [];
+
+    document.getElementById('questionType').addEventListener('change', function() {
+        document.getElementById('qcmFields').style.display = this.value === 'qcm' ? 'block' : 'none';
+    });
+
+    document.getElementById('addQuestion').addEventListener('click', function() {
+        const type = document.getElementById('questionType').value;
+        const text = document.getElementById('questionText').value;
+        const answers = document.getElementById('answerText').value;
+        const note = document.getElementById('note').value;
+        const time = document.getElementById('time').value;
+        const options = document.getElementById('options').value;
+        // const answers = document.getElementById('answers').value;
+        const media = document.getElementById('media').files[0];
+
+        if (!text || !note || !time || (type === 'qcm' && (!options || !answers))) {
+            alert('Veuillez remplir tous les champs!');
+            return;
+        }
+
+        const question = {
+            type, text, note, time, options, answers, media: media ? media.name : null
+        };
+        questions.push(question);
+        renderQuestions();
+
+        document.getElementById('questionText').value = '';
+        
+        document.getElementById('note').value = '';
+        document.getElementById('time').value = '';
+        document.getElementById('options').value = '';
+        document.getElementById('answers').value = '';
+        document.getElementById('media').value = '';
+    });
+
+    function renderQuestions() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+        questions.forEach((q, index) => {
+            const div = document.createElement('div');
+            div.className = 'card mb-2';
+            div.innerHTML = `
+                <div class="card-body">
+                    <b>Q${index + 1}:</b> ${q.text} (${q.type})
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-warning me-2" onclick="editQuestion(${index})">Modifier</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteQuestion(${index})">Supprimer</button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function editQuestion(index) {
+        const q = questions[index];
+        document.getElementById('questionType').value = q.type;
+        document.getElementById('questionText').value = q.text;
+        document.getElementById('note').value = q.note;
+        document.getElementById('time').value = q.time;
+        document.getElementById('options').value = q.options;
+        document.getElementById('answers').value = q.answers;
+        document.getElementById('qcmFields').style.display = q.type === 'qcm' ? 'block' : 'none';
+        deleteQuestion(index);
+    }
+
+    function deleteQuestion(index) {
+        questions.splice(index, 1);
+        renderQuestions();
+    }
+
+    document.getElementById('finish').addEventListener('click', async function() {
+        const title = document.getElementById('examTitle').value;
+        const desc = document.getElementById('description').value;
+        const audience = document.getElementById('audience').value;
+
+        if (!title || !desc || !audience || questions.length === 0) {
+            alert('Veuillez remplir tous les champs de l\'examen et ajouter au moins une question!');
+            return;
+        }
+
+        const res = await fetch('http://localhost:3000/api/exams', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({title, desc, audience, questions})
+        });
+
+        const data = await res.json();
+        alert(`Lien pour l'étudiant: ${window.location.origin}/passexam.html?id=${data.id}`);
+        questions = [];
+        renderQuestions();
+    });
+</script>
+</body>
+</html>
