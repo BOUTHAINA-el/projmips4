@@ -50,6 +50,28 @@ app.get('/api/exams/:id', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+// Modèle MongoDB pour stocker la géolocalisation
+const geoSchema = new mongoose.Schema({
+    latitude: Number,
+    longitude: Number,
+    timestamp: { type: Date, default: Date.now }
+});
+
+const GeoLocation = mongoose.model('GeoLocation', geoSchema);
+
+// Route pour recevoir et sauvegarder les coordonnées
+app.post('/api/geolocation', async (req, res) => {
+    const { latitude, longitude } = req.body;
+
+    if (latitude == null || longitude == null) {
+        return res.status(400).json({ message: 'Coordonnées manquantes' });
+    }
+
+    const location = new GeoLocation({ latitude, longitude });
+    await location.save();
+
+    res.json({ message: 'Coordonnées enregistrées avec succès', location });
+});
 
 const PORT = 3000;
 app.listen(PORT, () => {
