@@ -6,14 +6,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container my-4">
-    <!--giolocalisation--> 
+    <!--colocation--> 
     <div id="geoLocationPrompt" class="alert alert-info">
         <p>Avant de commencer l'examen, nous avons besoin d'accéder à votre géolocalisation.</p>
         <button id="allowGeo" class="btn btn-primary">Autoriser la géolocalisation</button>
         <button id="denyGeo" class="btn btn-danger">Refuser</button>
     </div>
     
-    <!--giolocalisation--> 
+    <!--colocation--> 
     <h1 class="text-center mb-4">Passer l'examen</h1>
     <div class="input-group mb-3">
         <input type="text" id="examId" class="form-control" placeholder="Entrer l'ID de l'examen">
@@ -24,7 +24,7 @@
     <h2 id="scoreContainer" class="mt-4"></h2>
 
 <script>
-        //le debut de giolocalisation
+        //le debut de colocaton
         
  let userLocation = null;
 
@@ -57,14 +57,22 @@ document.getElementById('denyGeo').addEventListener('click', function() {
     alert('Vous avez refusé la géolocalisation. Vous ne pourrez pas passer l\'examen.');
     window.location.href = 'index.html'; // Redirection si refus
 });
-//fin giolocalisation
+//fin lolocation
 
         let currentIndex = 0;
         let score = 0;
         let examData = null;
         let timer = null;
 
-        
+        document.getElementById('loadExam').addEventListener('click', async function() {
+            const id = document.getElementById('examId').value.trim();
+            const res = await fetch(`http://localhost:3000/api/exams/${id}`);
+            if (!res.ok) return alert('Examen introuvable');
+            examData = await res.json();
+            currentIndex = 0;
+            score = 0;
+            showQuestion();
+        });
 
         function showQuestion() {
             if (currentIndex >= examData.questions.length) {
@@ -101,9 +109,47 @@ document.getElementById('denyGeo').addEventListener('click', function() {
             return 'div';
         }
 
-    
+        function startTimer(seconds) {
+            let counter = seconds;
+            document.getElementById('timer').innerText = `Temps restant: ${counter}s`;
+            timer = setInterval(() => {
+                counter--;
+                document.getElementById('timer').innerText = `Temps restant: ${counter}s`;
+                if (counter <= 0) {
+                    clearInterval(timer);
+                    checkAnswer(true);
+                }
+            }, 1000);
+        }
+
+        function checkAnswer(timeout = false) {
+            clearInterval(timer);
+            const q = examData.questions[currentIndex];
+            const userAnswer = document.getElementById('answer').value.trim();
+            let correct = false;
+
+            if (q.type === 'direct') {
+                correct = q.answers.split(';').map(a => a.trim().toLowerCase()).includes(userAnswer.toLowerCase());
+            } else if (q.type === 'qcm') {
+                const indices = userAnswer.split(';').map(x => x.trim());
+                correct = JSON.stringify(indices.sort()) === JSON.stringify(q.answers.split(';').sort());
+            }
+
+            if (!timeout && correct) {
+                score += parseInt(q.note);
+                alert('Correct!');
+            } else {
+                alert('Faux!');
+            }
+
+            currentIndex++;
+            showQuestion();
+        }
     </script>
 </body>
 </html>
+
+
+
 
 
